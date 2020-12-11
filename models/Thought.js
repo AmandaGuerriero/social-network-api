@@ -9,7 +9,7 @@ const ReactionSchema = new Schema(
         reactionBody: {
             type: String,
             required: true,
-            // 280 character maximum
+            maxLength: [280, 'You exceeded the character limit, please shorten your reaction']
         },
         username: {
             type: String,
@@ -32,8 +32,9 @@ const ThoughtSchema = new Schema(
     {
         thoughtText: {
             type: String,
-            required: true
-            // Must be between 1 and 280 characters
+            required: true,
+            minLength: [1, 'Too few characters'],
+            maxLength: [280, 'Too many characters, please shorten your thought']
         },
         createdAt: {
             type: Date,

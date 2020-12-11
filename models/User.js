@@ -13,31 +13,28 @@ const UserSchema = new Schema(
             unique: true,
             required: true
             // Valid email address
-        }
-        // thoughts: [{
-        //     type: Schema.Types.ObjectId,
-        //     ref: 'Thought'
-        // }],
-        // friends: [{
-        //     type: Schema.Types.ObjectId,
-        //     ref: 'User'
-        // }]
+        },
+        thoughts: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Thought'
+        }],
+        friends: [ this ]
+    },
+    {
+        toJSON: {
+            virtuals: true,
+            getters: true
+    },
+        id: false
     }
-    // {
-    // toJSON: {
-    //     // virtuals: true,
-    //     getters: true
-    // },
-    //     id: false
-    // }
 );
 
-// UserSchema.virtual('thoughtCount').get(function() {
-//   return this.thouths.reduce(
-//     (total, thought) => total + thought.replies.length + 1,
-//     0
-//   );
-// });
+UserSchema.virtual('thoughtCount').get(function() {
+  return this.thougths.reduce(
+    (total, thought) => total + thought.replies.length + 1,
+    0
+  );
+});
 
 const User = model('User', UserSchema);
 
