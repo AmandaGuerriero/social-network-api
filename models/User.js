@@ -1,3 +1,5 @@
+var moment = require('moment'); 
+moment().format("MMM Do YYYY"); 
 const { Schema, model } = require('mongoose');
 
 const UserSchema = new Schema(
@@ -29,9 +31,9 @@ const UserSchema = new Schema(
     }
 );
 
-UserSchema.virtual('thoughtCount').get(function() {
-  return this.thougths.reduce(
-    (total, thought) => total + thought.replies.length + 1,
+UserSchema.virtual('friendCount').get(function() {
+  return this.friends.reduce(
+    (total, friend) => total + friend.replies.length + 1,
     0
   );
 });
