@@ -44,7 +44,8 @@ const ThoughtSchema = new Schema(
             get: createdAtVal => moment(createdAtVal)
         },
         username: {
-            // Not sure how to reference this
+            type: String,
+            required: true
         },
         reactions: [ReactionSchema]
     },
