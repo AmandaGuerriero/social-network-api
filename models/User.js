@@ -1,5 +1,4 @@
-var moment = require('moment'); 
-moment().format("MMM Do YYYY"); 
+var validator = require('validator');
 const { Schema, model } = require('mongoose');
 
 const UserSchema = new Schema(
@@ -13,8 +12,15 @@ const UserSchema = new Schema(
         email: {
             type: String,
             unique: true,
-            required: true
-            // Valid email address
+            required: true,
+            validate: {
+                validator: function(email) {
+                    var emailAddress = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                    return emailAddress.test(email)
+                },
+                message: "You must provide a valid email address."
+              }
+            
         },
         thoughts: [{
             type: Schema.Types.ObjectId,
