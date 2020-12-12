@@ -1,4 +1,4 @@
-# social-network-api
+# Social Network API
 
 ![Github license](https://img.shields.io/badge/license-MIT-blue.svg)
 
