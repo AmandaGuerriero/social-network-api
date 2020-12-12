@@ -4,10 +4,6 @@ const thoughtController = {
   // Get All Thoughts
   getAllThoughts(req, res) {
     Thought.find({})
-        .populate({
-            path: 'users',
-            select: '-__v'
-        })
         .select('-__v')
         .sort({ _id: -1 })
         .then(dbThoughtData => res.json(dbThoughtData))
@@ -32,10 +28,22 @@ const thoughtController = {
         });
   },
 
-  // add Thought
+  // Add Thought
   addThought({ body }, res) {
     Thought.create(body)
-        .then(dbUserData => res.json(dbUserData))
+        .then(dbThoughtData => {
+          return User.findOneAndUpdate(
+            { _id: body.userId },
+            { $push: { thoughts: dbThoughtData._id} },
+            { new: true}
+          );
+        })
+        .then((dbUserData) => {
+          if (!dbUserData) {
+            return res.status(404).json({ message: 'Thought created but no user associated' });
+          }
+          res.json({ message: 'Your thought was created'});
+        })
         .catch(err => res.json(err));
   },
 
@@ -54,23 +62,23 @@ const thoughtController = {
 
   // remove Thought
   deleteThought({ params }, res) {
-    Thought.findOneAndDelete({ _id: params.thoughtId })
-      .then(deletedThought => {
-        if (!deletedThought) {
+    Thought.findOneAndDelete({ _id: params.id })
+      .then(dbThoughtData => {
+        if (!dbThoughtData) {
           return res.status(404).json({ message: 'No thought with this id!' });
         }
-        return Thought.findOneAndUpdate(
-          { _id: params.thoughtId },
-          { $pull: { thoughts: params.thoughtId } },
+        return User.findOneAndUpdate(
+          { thoughts: params.id },
+          { $pull: { thoughts: params.id } },
           { new: true }
         );
       })
-      .then(dbThoughtData => {
-        if (!dbThoughtData) {
-          res.status(404).json({ message: 'No thought found with this id!' });
+      .then(dbUserData => {
+        if (!dbUserData) {
+          res.status(404).json({ message: 'No user found for this thought!' });
           return;
         }
-        res.json(dbThoughtData);
+        res.json( { message: 'Thought deleted successfully!'});
       })
       .catch(err => res.json(err));
   },
@@ -99,7 +107,7 @@ const thoughtController = {
       { $pull: { replies: { reactionId: params.reactionId } } },
       { new: true }
     )
-      .then(dbUserData => res.json(dbUserData))
+      .then(dbThoughtData => res.json(dbThoughtData))
       .catch(err => res.json(err));
   }
 };
