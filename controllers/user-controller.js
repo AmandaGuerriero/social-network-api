@@ -17,7 +17,7 @@ const userController = {
         });
     },
 
-    // Get a single user by ID
+    // Get a single User by ID
     getUserById({ params }, res) {
     User.findOne({ _id: params.id })
         .populate({
@@ -39,7 +39,7 @@ const userController = {
         .catch(err => res.json(err));
     },
 
-    // update User by id
+    // Update User by id
     updateUser({ params, body }, res) {
     User.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
         .then(dbUserData => {
@@ -52,9 +52,9 @@ const userController = {
         .catch(err => res.json(err));
     },
 
-    // delete User
+    // Delete a User
     deleteUser({ params, body }, res) {
-        User.findOneAndDelete({ _id: params.id })
+    User.findOneAndDelete({ _id: params.id })
         .then(dbUserData => {
             if (!dbUserData) {
                 return res.status(404).json({ message: 'No User found with this id!' });
@@ -67,6 +67,20 @@ const userController = {
         .catch((err) => {
             res.status(500).json(err);
         })
+    },
+
+    // Add a Friend
+    addFriend({params, body}, res) {
+    User.findOneAndUpdate({_id: params.id}, { $addToSet: { friends: params.friendId}}, {new: true})
+        .then((dbUserData) => {
+            if (!dbUserData) {
+                return res.status(404).json({ message: 'No User found with this id!'});
+            }
+            res.json(dbUserData);
+        })
+        .catch((err) => {
+            res.status(500).json(err)
+        });
     }
             
 };
