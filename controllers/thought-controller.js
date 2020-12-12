@@ -13,7 +13,7 @@ const thoughtController = {
         });
     },
   
-  // Get a single thought by ID
+  // Get a single Thought by ID
   getThoughtById({ params }, res) {
     Thought.findOne({ _id: params.id })
         .populate({
@@ -28,7 +28,7 @@ const thoughtController = {
         });
   },
 
-  // Add Thought
+  // Add a Thought
   addThought({ body }, res) {
     Thought.create(body)
         .then(dbThoughtData => {
@@ -60,7 +60,7 @@ const thoughtController = {
         .catch(err => res.json(err));
     },
 
-  // remove Thought
+  // Delete Thought
   deleteThought({ params }, res) {
     Thought.findOneAndDelete({ _id: params.id })
       .then(dbThoughtData => {
@@ -83,7 +83,7 @@ const thoughtController = {
       .catch(err => res.json(err));
   },
 
-  // add Reaction to Thought
+  // Add Reaction to Thought
   addReaction({ params, body }, res) {
     Thought.findOneAndUpdate(
       { _id: params.thoughtId },
@@ -100,7 +100,7 @@ const thoughtController = {
       .catch(err => res.json(err));
   },
 
-  // remove Reaction
+  // Remove a Reaction from a Thought
   removeReaction({ params }, res) {
     Thought.findOneAndUpdate(
       { _id: params.thoughtId },
